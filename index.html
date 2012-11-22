@@ -1,0 +1,115 @@
+<!doctype html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+        <title>#ingress</title>
+        <link href='http://fonts.googleapis.com/css?family=Droid+Sans:700' rel='stylesheet' type='text/css'>
+        <style type="text/css">
+            body {
+                background: #0e0c0d url('background.png') repeat-x 0 150px;
+            }
+
+            #logo {
+                display: block;
+                margin-top: -webkit-calc(100%/6);
+                margin-top: -moz-calc(100%/6);
+                margin-top: calc(100%/6);
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            #plus, #audio {
+                font-family: 'Droid Sans', sans-serif;
+                position: absolute;
+                color: white;
+                bottom: 20px;
+            }
+
+            #plus {
+                font-size: 12pt;
+                left: 20px;
+            }
+
+            #plus a, #audio a {
+                color: white;
+                text-decoration: none;
+            }
+
+            #audio {
+                font-size: 8pt;
+                right: 20px;
+            }
+
+            #audio audio {
+                margin-left: 1em;
+            }
+        </style>
+    </head>
+
+    <body>
+        <img id="logo" src="ingress.svg" alt="Ingress" />
+        <div id="plus"><a href="https://plus.google.com/114182909067816580108/posts">+Sven Jacobs</a></div>
+        <div id="audio">
+            Music: <a href="http://ccmixter.org/people/hisboyelroy">Below (Frozen In Time Mix) by hisboyelroy</a> 
+            <audio controls autoplay loop preload="auto">
+                <source src="magnatune_-_hisboyelroy_-_Below_(frozen_in_time_mix).mp3" type="audio/mpeg">
+            </audio>
+        </div>
+
+        <script type="text/javascript">
+            var deg = 0,
+                scale = 0.5,
+                scaleDir = 1,
+                nextFlash = getNextFlash(),
+                logo = document.getElementById('logo'),
+                thunders = [
+                    new Audio('thunder1.wav'),
+                    new Audio('thunder2.wav'),
+                    new Audio('thunder3.wav')
+                ],
+                rain = new Audio('rain.wav'),
+                requestAnimationFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame;
+
+            function logoAnim(timestamp) {
+                if (deg === 360) {
+                    deg = 0.5;
+                } else {
+                    deg += 0.5;
+                }
+
+                if (scale <= 0.5) {
+                    scaleDir = 1;
+                } else if (scale >= 1.5) {
+                    scaleDir = 0;
+                }
+
+                scale += scaleDir === 1 ? 0.001 : -0.001;
+                logo.style.WebkitTransform = logo.style.MozTransform = logo.style.transform = 'rotate(' + deg + 'deg) scale(' + scale + ',' + scale + ')';
+                requestAnimationFrame(logoAnim);
+            }
+
+            function flash(timestamp) {
+              if (timestamp >= nextFlash) {
+                    document.body.style.backgroundColor = 'white';
+                    window.setTimeout(function () {
+                        document.body.style.backgroundColor = '#0e0c0d';
+                    }, 50);
+                    nextFlash = getNextFlash();
+                    thunders[Math.floor(Math.random() * thunders.length)].play();
+              }
+
+              requestAnimationFrame(flash);
+            }
+
+            function getNextFlash() {
+              return new Date().getTime() + Math.floor(Math.random() * 5000) + 1000;
+            }
+
+            rain.loop = true;
+            rain.play();
+
+            requestAnimationFrame(logoAnim);
+            requestAnimationFrame(flash);
+        </script>
+    </body>
+</html>
